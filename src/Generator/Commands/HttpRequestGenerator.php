@@ -8,7 +8,7 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ContainerHttpRequestGenerator extends GeneratorCommand implements ComponentsGenerator
+class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -25,7 +25,7 @@ class ContainerHttpRequestGenerator extends GeneratorCommand implements Componen
      *
      * @var string
      */
-    protected $name = 'apiato:generate:htt-request';
+    protected $name = 'apiato:generate:http-request';
 
     /**
      * The console command description.

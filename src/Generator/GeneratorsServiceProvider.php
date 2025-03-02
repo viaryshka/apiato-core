@@ -6,6 +6,7 @@ use Apiato\Core\Generator\Commands\ActionGenerator;
 use Apiato\Core\Generator\Commands\CommandGenerator;
 use Apiato\Core\Generator\Commands\ConfigurationGenerator;
 use Apiato\Core\Generator\Commands\ContainerApiGenerator;
+use Apiato\Core\Generator\Commands\HttpRequestGenerator;
 use Apiato\Core\Generator\Commands\ControllerGenerator;
 use Apiato\Core\Generator\Commands\DTOGenerator;
 use Apiato\Core\Generator\Commands\JobGenerator;
@@ -52,6 +53,7 @@ class GeneratorsServiceProvider extends ServiceProvider
             ServiceProviderGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,
+            HttpRequestGenerator::class,
         ];
     }
 }
