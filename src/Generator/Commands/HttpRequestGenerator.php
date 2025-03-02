@@ -60,11 +60,9 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
 
         // section name as inputted and lower
         $sectionName = $this->sectionName;
-        $_sectionName = Str::lower($this->sectionName);
 
         // container name as inputted and lower
         $containerName = $this->containerName;
-        $_containerName = Str::lower($this->containerName);
 
         // create the default routes for this container
         $this->printInfoMessage('Generating Route');
@@ -104,13 +102,6 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
                 '--container' => $containerName,
                 '--file' => $route['action'],
                 '--ui' => $ui,
-                '--stub' => $route['stub'],
-            ]);
-
-            $this->call('apiato:generate:task', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => $route['task'],
                 '--stub' => $route['stub'],
             ]);
 
