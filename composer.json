@@ -19,13 +19,13 @@
   ],
   "require": {
     "php": "^8.2",
-    "laravel/framework": "^11.0",
-    "prettus/l5-repository": "^2.9.1",
-    "spatie/laravel-data": "^4.11"
+    "laravel/framework": "^12.0.1",
+    "prettus/l5-repository": "dev-laravel12",
+    "spatie/laravel-data": "^4.13.1"
   },
   "require-dev": {
-    "laravel/pint": "^1.14",
-    "orchestra/testbench": "^9.1.2"
+    "laravel/pint": "^v1.21.0",
+    "orchestra/testbench": "^10.0.0"
   },
   "autoload": {
     "psr-4": {
@@ -64,6 +64,12 @@
       "php-http/discovery": true
     }
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/viaryshka/l5-repository"
+    }
+  ],
   "minimum-stability": "stable",
   "prefer-stable": true
 }
