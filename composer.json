@@ -30,12 +30,12 @@
     "require": {
         "php": "^8.2",
         "apiato/container-installer": "^2.0.8",
-        "prettus/l5-repository": "^2.9.1",
+        "prettus/l5-repository": "dev-laravel12",
         "spatie/laravel-fractal": "^6.0",
-        "vinkla/hashids": "^12.0",
+        "vinkla/hashids": "^13.0",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.0.1",
         "laravel/passport": "^12.0.0",
         "ext-gettext": "*"
     },
@@ -44,15 +44,15 @@
         "friendsofphp/php-cs-fixer": "^3.8.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "mockery/mockery": "^1.4.4",
-        "orchestra/testbench": "^9.1.2",
+        "orchestra/testbench": "v10.1.0",
         "php-standard-library/psalm-plugin": "^2.3",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "^10.0",
-        "psalm/plugin-laravel": "^2.8",
+        "phpunit/phpunit": "^11.0",
+        "psalm/plugin-laravel": "^3.0.1",
         "psalm/plugin-mockery": "^1.1",
-        "psalm/plugin-phpunit": "^0.18.4",
+        "psalm/plugin-phpunit": "^0.19.2",
         "roave/security-advisories": "dev-latest",
-        "vimeo/psalm": "^5.25.0"
+        "vimeo/psalm": "^6.8.8"
     },
     "autoload": {
         "psr-4": {
@@ -82,6 +82,12 @@
             }
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/viaryshka/l5-repository"
+        }
+    ],
     "scripts": {
         "php-cs-fixer": "php-cs-fixer --config=./php_cs.dist.php"
     },
