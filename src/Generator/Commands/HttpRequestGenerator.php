@@ -15,7 +15,7 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
      */
     public array $inputs = [
-        ['file', null, InputOption::VALUE_OPTIONAL, 'The name of the request to be generated (CreateBook, UpdateBook, ...)'],
+        ['requestname', null, InputOption::VALUE_OPTIONAL, 'The name of the request to be generated (CreateBook, UpdateBook, ...)'],
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of all endpoints to be generated (1, 2, ...)'],
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/books, /cars, ...)'],
     ];
@@ -42,17 +42,17 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{section-name}/{container-name}/UI/API/Controllers/*';
+    protected string $pathStructure = '{section-name}/{container-name}/*';
 
     /**
      * The structure of the file name.
      */
-    protected string $nameStructure = '{file-name}Controller';
+    protected string $nameStructure = '{file-name}';
 
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'controllers/generic.stub';
+    protected string $stubName = 'readme.stub';
 
     public function getUserInputs(): ?array
     {
@@ -67,13 +67,14 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
         // create the default routes for this container
         $this->printInfoMessage('Generating Route');
         $version = $this->checkParameterOrAsk('docversion', 'Enter the version for all API endpoints (integer)', 1);
-        $requestName = $this->checkParameterOrAsk('file', 'Enter the name of the request to be generated (CreateBook, UpdateBook, ...)', 'Default');
+        $requestName = $this->checkParameterOrAsk('requestname', 'Enter the name of the request to be generated (CreateBook, UpdateBook, ...)', 'Default');
         // get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all API endpoints (foo/bar/{id})', 'default'));
         $url = ltrim($url, '/');
 
         $this->printInfoMessage('Generating Request');
         $this->printInfoMessage('Generating Action');
+        $this->printInfoMessage('Generating Controller');
 
         $route = [
             'stub' => 'Generic',
@@ -88,40 +89,48 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
             'request_stub' => 'generic',
         ];
 
-            $this->call('apiato:generate:request', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => $route['request'],
-                '--ui' => $ui,
-                '--stub' => $route['request_stub'],
-            ]);
+        $this->call('apiato:generate:request', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => $route['request'],
+            '--ui' => $ui,
+            '--stub' => $route['request_stub'],
+        ]);
 
-            $this->call('apiato:generate:action', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => $route['action'],
-                '--ui' => $ui,
-                '--stub' => $route['stub'],
-                '--model' => $this->containerName,
-            ]);
+        $this->call('apiato:generate:action', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => $route['action'],
+            '--ui' => $ui,
+            '--stub' => $route['stub'],
+            '--model' => $this->containerName,
+        ]);
 
-            $this->call('apiato:generate:route', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => $route['name'].'Route',
-                '--ui' => $ui,
-                '--operation' => $route['operation'],
-                '--docversion' => $version,
-                '--url' => $route['url'],
-                '--verb' => $route['verb'],
-                '--controller' => $route['controller'],
-            ]);
+        $this->call('apiato:generate:route', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => $route['name'].'Route',
+            '--ui' => $ui,
+            '--operation' => $route['operation'],
+            '--docversion' => $version,
+            '--url' => $route['url'],
+            '--verb' => $route['verb'],
+            '--controller' => $route['controller'],
+        ]);
 
-            $this->call('apiato:generate:dto', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => $route['dto'],
-            ]);
+        $this->call('apiato:generate:controller', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => $route['controller'],
+            '--ui' => $ui,
+            '--stub' => $route['stub'],
+        ]);
+
+        $this->call('apiato:generate:dto', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => $route['dto'],
+        ]);
 
         return [
             'path-parameters' => [
@@ -139,5 +148,18 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
                 'file-name' => $this->fileName,
             ],
         ];
+    }
+
+    /**
+     * Get the default file name for this component to be generated.
+     */
+    public function getDefaultFileName(): string
+    {
+        return 'README';
+    }
+
+    public function getDefaultFileExtension(): string
+    {
+        return 'md';
     }
 }
