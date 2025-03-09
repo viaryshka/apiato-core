@@ -84,6 +84,7 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
             'action' => $requestName.'Action',
             'request' => $requestName.'Request',
             'dto' => $requestName.'Data',
+            'controller' => $requestName.'Controller',
             'request_stub' => 'generic',
         ];
 
