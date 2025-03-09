@@ -20,7 +20,7 @@
   "require": {
     "php": "^8.2",
     "laravel/framework": "^12.0.1",
-    "prettus/l5-repository": "dev-laravel12",
+    "prettus/l5-repository": "^2.10.0",
     "spatie/laravel-data": "^4.13.1"
   },
   "require-dev": {
@@ -64,12 +64,6 @@
       "php-http/discovery": true
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/viaryshka/l5-repository"
-    }
-  ],
   "minimum-stability": "stable",
   "prefer-stable": true
 }
