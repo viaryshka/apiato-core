@@ -10,6 +10,8 @@ trait HasKeywordsSearchTrait
 {
     protected array $keywordsFields = [];
 
+    protected array $fulltextFields = [];
+
     /**
      * @throws RepositoryException
      */
@@ -20,9 +22,23 @@ trait HasKeywordsSearchTrait
         return $this;
     }
 
-    protected function getKeywordsFields(): array
+    public function getKeywordsFields(): array
     {
         return $this->keywordsFields;
+    }
+
+    public function getFulltextFields(): array
+    {
+        $result = [];
+        foreach ($this->fulltextFields as $key => $value) {
+            if (is_int($key)) {
+                $result[$value] = $value;
+            } else {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 
     public function intersectSearchFields(array $fields = []): array

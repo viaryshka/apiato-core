@@ -25,16 +25,26 @@ class KeywordsSearchCriteria extends Criteria
             $fields = [];
         }
         $fields = $repository->intersectSearchFields($fields);
+        $fullTextFields = $repository->getFulltextFields();
 
         if (empty($keywords) || count($fields) === 0) {
             return $model;
         }
         $keywords = trim($keywords);
 
-        return $model->where(function ($query) use ($keywords, $fields, $repository) {
+        return $model->where(function ($query) use ($keywords, $fields, $fullTextFields, $repository) {
             $or = false;
+            foreach ($fullTextFields as $field) {
+                if ($or) {
+                    $query->orWhereFullText($field, $keywords);
+                } else {
+                    $query->whereFullText($field, $keywords);
+                }
+                $or = true;
+            }
             foreach ($fields as $field) {
-                if (! $repository->setKeywordsSearchBuilder($query, $field, $keywords, $or)) {
+                if (! array_key_exists($field, $fullTextFields) &&
+                    ! $repository->setKeywordsSearchBuilder($query, $field, $keywords, $or)) {
                     $query->likeOrWhere($field, $keywords, $or);
                 }
                 $or = true;
