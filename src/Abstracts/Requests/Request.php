@@ -64,7 +64,7 @@ abstract class Request extends LaravelRequest
         } elseif (is_string($this->access['permissions'])) {
             $permissions = explode('|', $this->access['permissions']);
         } elseif ($this->access['permissions'] instanceof BasePermissionEnum) {
-            $permissions = $this->access['permissions']->value;
+            $permissions = [$this->access['permissions']->value];
         } else {
             return [];
         }
@@ -83,7 +83,7 @@ abstract class Request extends LaravelRequest
         } elseif (is_string($this->access['roles'])) {
             $roles = explode('|', $this->access['roles']);
         } elseif ($this->access['roles'] instanceof BasePermissionEnum) {
-            $roles = $this->access['roles']->value;
+            $roles = [$this->access['roles']->value];
         } else {
             return [];
         }
