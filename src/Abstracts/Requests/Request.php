@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
+use Apiato\Core\Abstracts\Enums\BasePermissionEnum;
 use Apiato\Core\Abstracts\Models\UserModel as User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Facades\Config;
@@ -58,10 +59,15 @@ abstract class Request extends LaravelRequest
         if (! array_key_exists('permissions', $this->access) || ! $this->access['permissions']) {
             return [];
         }
-
-        $permissions = is_array($this->access['permissions']) ? $this->access['permissions'] :
-            explode('|', $this->access['permissions']);
-
+        if (is_array($this->access['permissions'])) {
+            $permissions = $this->access['permissions'];
+        } elseif (is_string($this->access['permissions'])) {
+            $permissions = explode('|', $this->access['permissions']);
+        } elseif ($this->access['permissions'] instanceof BasePermissionEnum) {
+            $permissions = $this->access['permissions']->value;
+        } else {
+            return [];
+        }
         return array_map(static function ($permission) use ($user) {
             return $user->hasPermissionTo($permission);
         }, $permissions);
@@ -72,9 +78,15 @@ abstract class Request extends LaravelRequest
         if (! array_key_exists('roles', $this->access) || ! $this->access['roles']) {
             return [];
         }
-
-        $roles = is_array($this->access['roles']) ? $this->access['roles'] :
-            explode('|', $this->access['roles']);
+        if (is_array($this->access['roles'])) {
+            $roles = $this->access['roles'];
+        } elseif (is_string($this->access['roles'])) {
+            $roles = explode('|', $this->access['roles']);
+        } elseif ($this->access['roles'] instanceof BasePermissionEnum) {
+            $roles = $this->access['roles']->value;
+        } else {
+            return [];
+        }
 
         return array_map(static function ($role) use ($user) {
             return $user->hasRole($role);
