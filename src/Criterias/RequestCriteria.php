@@ -27,7 +27,7 @@ class RequestCriteria extends ParentRequestCriteria
         $sortedBy = $this->request->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
         $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
         $withCount = $this->request->get(config('repository.criteria.params.withCount', 'withCount'), null);
-        $searchJoin = $this->request->get(config('repository.criteria.params.searchJoin', 'searchJoin'), '');
+        $searchJoin = $this->request->get(config('repository.criteria.params.searchJoin', 'searchJoin'), 'and');
         $sortedBy = ! empty($sortedBy) ? $sortedBy : 'asc';
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
