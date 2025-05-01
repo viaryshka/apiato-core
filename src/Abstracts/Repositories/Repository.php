@@ -8,6 +8,8 @@ use Apiato\Core\Traits\HasKeywordsSearchTrait;
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
 use Illuminate\Support\Facades\Request;
 use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Events\RepositoryEntityDeleted;
+use Prettus\Repository\Events\RepositoryEntityDeleting;
 
 class Repository extends BaseRepository
 {
@@ -112,5 +114,27 @@ class Repository extends BaseRepository
     public function min(string $column)
     {
         return $this->model->min($column);
+    }
+
+    public function forceDelete($id)
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->find($id);
+        $originalModel = clone $model;
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityDeleting($this, $model));
+
+        $deleted = $model->forceDelete();
+
+        event(new RepositoryEntityDeleted($this, $originalModel));
+
+        return $deleted;
     }
 }
