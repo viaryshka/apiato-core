@@ -265,6 +265,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--file' => $route['dto'],
             ]);
         }
+        $this->call('apiato:generate:task', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => 'Find'.$model.'ByFieldTask',
+            '--model' => $model,
+            '--stub' => 'field',
+        ]);
 
         return [
             'path-parameters' => [
