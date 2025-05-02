@@ -94,24 +94,25 @@ class RequestCriteria extends ParentRequestCriteria
                     if ($isFirstField || $modelForceAndWhere) {
                         if (! is_null($value)) {
                             if (! is_null($relation)) {
-                                $query->whereHas($relation, function ($query) use ($field, $condition, $value, $isScope) {
-                                    if ($condition === 'in') {
-                                        $query->whereIn($field, $value);
-                                    } elseif ($condition === 'between') {
-                                        $query->whereBetween($field, $value);
-                                    } elseif ($condition === 'is_null') {
-                                        $query->whereNull($field);
-                                    } elseif ($condition === 'is_not_null') {
-                                        $query->whereNotNull($field);
-                                    } elseif ($isScope) {
-                                        $scopeName = explode('-', $condition);
-                                        if (count($scopeName) == 2) {
-                                            $query->{$scopeName[1]}($value);
+                                $query->whereHas($relation,
+                                    function ($query) use ($field, $condition, $value, $isScope) {
+                                        if ($condition === 'in') {
+                                            $query->whereIn($field, $value);
+                                        } elseif ($condition === 'between') {
+                                            $query->whereBetween($field, $value);
+                                        } elseif ($condition === 'is_null') {
+                                            $query->whereNull($field);
+                                        } elseif ($condition === 'is_not_null') {
+                                            $query->whereNotNull($field);
+                                        } elseif ($isScope) {
+                                            $scopeName = explode('-', $condition);
+                                            if (count($scopeName) == 2) {
+                                                $query->{$scopeName[1]}($value);
+                                            }
+                                        } else {
+                                            $query->where($field, $condition, $value);
                                         }
-                                    } else {
-                                        $query->where($field, $condition, $value);
-                                    }
-                                });
+                                    });
                             } else {
                                 if ($condition === 'in') {
                                     $query->whereIn($modelTableName.'.'.$field, $value);
@@ -135,24 +136,25 @@ class RequestCriteria extends ParentRequestCriteria
                     } else {
                         if (! is_null($value)) {
                             if (! is_null($relation)) {
-                                $query->orWhereHas($relation, function ($query) use ($field, $condition, $value, $isScope) {
-                                    if ($condition === 'in') {
-                                        $query->whereIn($field, $value);
-                                    } elseif ($condition === 'between') {
-                                        $query->whereBetween($field, $value);
-                                    } elseif ($condition === 'is_null') {
-                                        $query->whereNull($field);
-                                    } elseif ($condition === 'is_not_null') {
-                                        $query->whereNotNull($field);
-                                    } elseif ($isScope) {
-                                        $scopeName = explode('-', $condition);
-                                        if (count($scopeName) == 2) {
-                                            $query->{$scopeName[1]}($value);
+                                $query->orWhereHas($relation,
+                                    function ($query) use ($field, $condition, $value, $isScope) {
+                                        if ($condition === 'in') {
+                                            $query->whereIn($field, $value);
+                                        } elseif ($condition === 'between') {
+                                            $query->whereBetween($field, $value);
+                                        } elseif ($condition === 'is_null') {
+                                            $query->whereNull($field);
+                                        } elseif ($condition === 'is_not_null') {
+                                            $query->whereNotNull($field);
+                                        } elseif ($isScope) {
+                                            $scopeName = explode('-', $condition);
+                                            if (count($scopeName) == 2) {
+                                                $query->{$scopeName[1]}($value);
+                                            }
+                                        } else {
+                                            $query->where($field, $condition, $value);
                                         }
-                                    } else {
-                                        $query->where($field, $condition, $value);
-                                    }
-                                });
+                                    });
                             } else {
                                 if ($condition === 'in') {
                                     $query->orWhereIn($modelTableName.'.'.$field, $value);
@@ -308,7 +310,8 @@ class RequestCriteria extends ParentRequestCriteria
             }
 
             $model = $model
-                ->leftJoin("$middleTable AS $aliasesMiddleTable", $middleKeyName, '=', $aliasesMiddleTable.$middleLocalKey)
+                ->leftJoin("$middleTable AS $aliasesMiddleTable", $middleKeyName, '=',
+                    $aliasesMiddleTable.$middleLocalKey)
                 ->leftJoin("$sortTable AS $aliasesSortedTable", $keyName, '=', $aliasesSortedTable.$localKey)
                 ->orderBy("$aliasesSortedTable.$sortColumn", $sortedBy)
                 ->addSelect($table.'.*');
@@ -336,4 +339,63 @@ class RequestCriteria extends ParentRequestCriteria
 
         return $searchData;
     }
+
+    /**
+     * @throws Exception
+     */
+    protected function parserFieldsSearch(
+        array $fields = [],
+        ?array $searchFields = null,
+        ?array $dataKeys = null
+    ): array {
+        if (! is_null($searchFields) && count($searchFields)) {
+            $acceptedConditions = config('repository.criteria.acceptedConditions', [
+                '=',
+                'like',
+            ]);
+            $originalFields = $fields;
+            $fields = [];
+
+            foreach ($searchFields as $index => $field) {
+
+                $field_parts = explode(':', $field);
+                $temporaryIndex = array_search($field_parts[0], $originalFields);
+
+                if (count($field_parts) == 2) {
+                    if (in_array($field_parts[1], $acceptedConditions)) {
+                        unset($originalFields[$temporaryIndex]);
+                        $field = $field_parts[0];
+                        $condition = $field_parts[1];
+                        if (! Str::startsWith($originalFields[$field], 'scope-')) {
+                            $originalFields[$field] = $condition;
+                        }
+                        $searchFields[$index] = $field;
+                    }
+                }
+            }
+
+            if (! is_null($dataKeys) && count($dataKeys)) {
+                $searchFields = array_unique(array_merge($dataKeys, $searchFields));
+            }
+
+            foreach ($originalFields as $field => $condition) {
+                if (is_numeric($field)) {
+                    $field = $condition;
+                    $condition = '=';
+                }
+                if (in_array($field, $searchFields)) {
+                    $fields[$field] = $condition;
+                }
+            }
+
+            if (count($fields) == 0) {
+                throw new \Exception(trans('repository::criteria.fields_not_accepted',
+                    ['field' => implode(',', $searchFields)]));
+            }
+
+        }
+
+        return $fields;
+    }
+
 }
