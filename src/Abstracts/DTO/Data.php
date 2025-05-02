@@ -40,12 +40,12 @@ abstract class Data extends LaravelData
         return property_exists($this, $key) && ! $this->{$key} instanceof Optional;
     }
 
-    public function get(string $key): mixed
+    public function get(string $key, $default = null): mixed
     {
         if ($this->contains($key)) {
             return $this->{$key};
         }
 
-        return null;
+        return $default;
     }
 }
