@@ -43,7 +43,7 @@ abstract class Data extends LaravelData
     public function get(string $key, $default = null): mixed
     {
         if ($this->contains($key)) {
-            return $this->{$key};
+            return $this->{$key} ?? $default;
         }
 
         return $default;
