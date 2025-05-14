@@ -2,31 +2,61 @@
 
 namespace Apiato\Core\Abstracts\Repositories;
 
-use Apiato\Core\Traits\CanEagerLoadTrait;
+use Apiato\Core\Http\RequestRelation;
 use Apiato\Core\Traits\HasAvailableSortsTrait;
 use Apiato\Core\Traits\HasKeywordsSearchTrait;
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
-use Illuminate\Support\Facades\Request;
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
 use Prettus\Repository\Events\RepositoryEntityDeleting;
+use RuntimeException;
 
+/**
+ * @template TModel of Model
+ */
 class Repository extends BaseRepository
 {
-    use CanEagerLoadTrait;
     use HasAvailableSortsTrait;
     use HasKeywordsSearchTrait;
     use HasRequestCriteriaTrait;
 
     protected int $maxPaginationLimit = 0;
 
-    protected ?bool $allowDisablePagination = null;
+    protected bool|null $allowDisablePagination = null;
+
+    /** @var Closure[] */
+    protected array $scopes = [];
 
     public function boot(): void
     {
         parent::boot();
 
-        $this->eagerLoadRequestedRelations();
+        if ($this->shouldEagerLoadIncludes()) {
+            $this->eagerLoadRequestedIncludes(app(RequestRelation::class));
+        }
+    }
+
+    public function shouldEagerLoadIncludes(): bool
+    {
+        return true;
+    }
+
+    public function eagerLoadRequestedIncludes(RequestRelation $requestRelation): void
+    {
+        $this->scope(function (Builder|Model $model) use ($requestRelation): Builder|Model {
+            if ($requestRelation->requestingIncludes()) {
+                if ($model instanceof Model) {
+                    return $model->with($requestRelation->getValidRelationsFor($model));
+                }
+
+                return $model->with($requestRelation->getValidRelationsFor($model->getModel()));
+            }
+
+            return $model;
+        });
     }
 
     public function model(): string
@@ -83,12 +113,12 @@ class Repository extends BaseRepository
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
-        return $limit ?? Request::get('limit');
+        return $limit ?? request()?->input('limit');
     }
 
     public function wantsToSkipPagination(mixed $limit): bool
     {
-        return $limit == '0';
+        return '0' === $limit || 0 === $limit;
     }
 
     public function canSkipPagination(): mixed
@@ -136,5 +166,47 @@ class Repository extends BaseRepository
         event(new RepositoryEntityDeleted($this, $originalModel));
 
         return $deleted;
+    }
+
+    public function scope(Closure $scope): static
+    {
+        $this->scopes[] = $scope;
+
+        return $this;
+    }
+
+    public function resetScope(): static
+    {
+        parent::resetScope();
+        $this->resetScopes();
+
+        return $this;
+    }
+
+    public function resetScopes(): static
+    {
+        $this->scopes = [];
+
+        return $this;
+    }
+
+    protected function applyScope(): static
+    {
+        parent::applyScope();
+        $this->applyScopes();
+
+        return $this;
+    }
+
+    protected function applyScopes(): static
+    {
+        foreach ($this->scopes as $scope) {
+            if (! is_callable($scope)) {
+                throw new RuntimeException('Query scope is not callable');
+            }
+            $this->model = $scope($this->model);
+        }
+
+        return $this;
     }
 }

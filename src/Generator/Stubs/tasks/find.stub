@@ -19,7 +19,11 @@ class Find{{model}}ByIdTask extends ParentTask
      */
     public function run(int $id): {{model}}
     {
-        ${{_model}} = $this->repository->find($id);
+        try {
+            ${{_model}} = $this->repository->find($id);
+        } catch (\Exception) {
+            throw new NotFoundException;
+        }
 
         return ${{_model}} ?? throw new NotFoundException();
     }

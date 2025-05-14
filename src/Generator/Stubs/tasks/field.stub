@@ -17,8 +17,8 @@ class Find{{model}}ByFieldTask extends ParentTask
     }
 
     /**
-         * @throws NotFoundException
-         * @throws RepositoryException
+     * @throws NotFoundException
+     * @throws RepositoryException
     */
     public function run(string $field, mixed $value): {{model}}
     {
