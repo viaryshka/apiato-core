@@ -77,7 +77,6 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
         $this->printInfoMessage('Generating Controller');
 
         $route = [
-            'stub' => 'Generic',
             'name' => $requestName,
             'operation' => $requestName,
             'verb' => 'GET',
@@ -104,6 +103,7 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
             '--ui' => $ui,
             '--stub' => 'http',
             '--request' => $requestName,
+            '--model' => $requestName,
         ]);
 
         $this->call('apiato:generate:route', [
