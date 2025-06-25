@@ -16,6 +16,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      * this generator.
      */
     public array $inputs = [
+        ['request', null, InputOption::VALUE_OPTIONAL, 'For http requests.'],
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
@@ -98,6 +99,8 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
                 'models' => $models,
                 'entity' => $entity,
                 'entities' => $entities,
+
+                'request' => $this->option('request'),
 
                 '_model' => $entity,
                 '_models' => $entities,

@@ -15,6 +15,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      * This is a replacement of the `getArguments` function "which reads from the console whenever it's called".
      */
     public array $inputs = [
+        ['request', null, InputOption::VALUE_OPTIONAL, 'For http requests.'],
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this action is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Action for.'],
@@ -89,6 +90,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
                 'models' => $models,
                 '_model' => $entity,
                 '_models' => Pluralizer::plural($entity),
+                'request' => $this->option('request'),
                 'ui' => $ui,
             ],
             'file-parameters' => [
