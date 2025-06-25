@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers;
+
+use App\Containers\{{section-name}}\{{container-name}}\Actions\{{request}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\DTO\{{request}}Data;
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Requests\{{request}}Request;
+use App\Ship\Parents\Controllers\ApiController as ParentApiController;
+use Illuminate\Http\JsonResponse;
+use Throwable;
+
+class {{class-name}} extends ParentApiController
+{
+    /**
+     * {{request}}
+     *
+     * @group {{container-name}}
+     *
+     * @throws Throwable
+     */
+    public function __invoke({{request}}Request $request): JsonResponse
+    {
+        $data = {{request}}Data::from($request->validated());
+        $response = app({{request}}Action::class)->run($data);
+
+        return $this->json($response);
+    }
+}

@@ -102,8 +102,8 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
             '--container' => $containerName,
             '--file' => $route['action'],
             '--ui' => $ui,
-            '--stub' => $route['stub'],
-            '--model' => $this->containerName,
+            '--stub' => 'http',
+            '--request' => $requestName,
         ]);
 
         $this->call('apiato:generate:route', [
@@ -123,7 +123,8 @@ class HttpRequestGenerator extends GeneratorCommand implements ComponentsGenerat
             '--container' => $containerName,
             '--file' => $route['controller'],
             '--ui' => $ui,
-            '--stub' => $route['stub'],
+            '--stub' => 'http',
+            '--request' => $requestName,
         ]);
 
         $this->call('apiato:generate:dto', [
