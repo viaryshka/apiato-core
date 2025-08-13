@@ -10,7 +10,7 @@ class WhereFieldCriteria extends Criteria
     public function __construct(
         private string $field,
         private string $operator,
-        private string $value,
+        private mixed $value,
     ) {}
 
     public function apply($model, PrettusRepositoryInterface $repository)
