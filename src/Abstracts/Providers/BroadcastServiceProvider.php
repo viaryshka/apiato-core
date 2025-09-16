@@ -9,7 +9,7 @@ abstract class BroadcastServiceProvider extends LaravelBroadcastServiceProvider
 {
     public function boot()
     {
-        Broadcast::routes();
+        Broadcast::routes(['prefix' => 'api', 'middleware' => ['auth:api']]);
 
         require app_path('Ship/Broadcasts/channels.php');
     }
