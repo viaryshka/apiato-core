@@ -48,4 +48,13 @@ abstract class Data extends LaravelData
 
         return $default;
     }
+
+    public function getArray(string $key, $default = []): array
+    {
+        if ($this->isset($key) && is_array($this->{$key}) && ! empty($this->{$key})) {
+            return $this->{$key};
+        }
+
+        return $default;
+    }
 }
