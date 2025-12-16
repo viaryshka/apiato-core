@@ -113,6 +113,6 @@ final readonly class RequestRelation
             Assert::string($includes);
         }
 
-        return Response::create()->manager()->parseIncludes($includes)->getRequestedIncludes();
+        return ApiResponse::create()->manager()->parseIncludes($includes)->getRequestedIncludes();
     }
 }

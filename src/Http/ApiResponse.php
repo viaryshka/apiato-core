@@ -21,7 +21,7 @@ use Webmozart\Assert\Assert;
  *
  * @see Fractal
  */
-class Response extends Fractal
+class ApiResponse extends Fractal
 {
     /**
      * Get the Fractal Manager instance.

@@ -8,7 +8,7 @@ use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
 
 /**
- * @method static \Apiato\Core\Http\Response create(mixed $data = null, callable|TransformerAbstract|null|string $transformer = null, SerializerAbstract|null|string $serializer = null)
+ * @method static \Apiato\Core\Http\ApiResponse create(mixed $data = null, callable|TransformerAbstract|null|string $transformer = null, SerializerAbstract|null|string $serializer = null)
  * @method static JsonResponse ok(mixed $data = null, array $headers = [], int $options = 0)
  * @method static JsonResponse created(mixed $data = null, array $headers = [], int $options = 0)
  * @method static JsonResponse noContent(array $headers = [], int $options = 0)
@@ -20,12 +20,12 @@ use League\Fractal\TransformerAbstract;
  * @method static bool hasMacro(string $name)
  * @method static void flushMacros()
  *
- * @see \Apiato\Core\Http\Response
+ * @see \Apiato\Core\Http\ApiResponse
  */
-class Response extends Facade
+class ApiResponse extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Apiato\Core\Http\Response::class;
+        return \Apiato\Core\Http\ApiResponse::class;
     }
 }
