@@ -7,10 +7,11 @@ use Apiato\Core\Scopes\KeywordsSearchScopes;
 use Apiato\Core\Traits\CanGetFillableStatically;
 use Apiato\Core\Traits\CanGetTableNameStatically;
 use Apiato\Core\Traits\FactoryLocatorTrait;
+use Apiato\Core\Http\Resources\ResourceKeyAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as LaravelEloquentModel;
 
-abstract class Model extends LaravelEloquentModel
+abstract class Model extends LaravelEloquentModel implements ResourceKeyAware
 {
     use CanGetFillableStatically;
     use CanGetTableNameStatically;
