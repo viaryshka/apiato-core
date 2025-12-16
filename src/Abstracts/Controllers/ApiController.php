@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Controllers;
 
+use Apiato\Core\Foundation\Facades\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 abstract class ApiController extends Controller
@@ -17,21 +18,21 @@ abstract class ApiController extends Controller
             $data['meta'] = $meta;
         }
 
-        return new JsonResponse($data, $status);
+        return ApiResponse::addMeta($meta)->create($data, $transformerClass)->json(null, $status);
     }
 
     public function responseWithCreatedTransform(mixed $data, string $transformerClass, array $meta = []): JsonResponse
     {
-        return $this->responseWithTransform($data, $transformerClass, 201, $meta);
+        return ApiResponse::addMeta($meta)->create($data, $transformerClass)->created();
     }
 
     public function json($data, $status = 200, array $headers = [], $options = 0): JsonResponse
     {
-        return new JsonResponse($data, $status, $headers, $options);
+        return ApiResponse::json($data, $status, $headers, $options);
     }
 
     public function noContent($status = 204): JsonResponse
     {
-        return new JsonResponse(null, $status);
+        return ApiResponse::noContent($status);
     }
 }
