@@ -13,11 +13,6 @@ abstract class ApiController extends Controller
         int $status = 200,
         array $meta = []
     ): JsonResponse {
-        $data = fractal($data, new $transformerClass)->toArray();
-        if (! empty($meta)) {
-            $data['meta'] = $meta;
-        }
-
         return ApiResponse::addMeta($meta)->create($data, $transformerClass)->json(null, $status);
     }
 
