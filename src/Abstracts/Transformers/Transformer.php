@@ -39,9 +39,6 @@ abstract class Transformer extends FractalTransformer
             if (empty($this->availableCounts)) {
                 return $data;
             }
-            if (! is_object($model) || ! property_exists($model, 'getAttributes')) {
-                return $data;
-            }
             $attributes = $model->getAttributes();
 
             foreach ($this->availableCounts as $relation) {
