@@ -12,23 +12,41 @@ abstract class Transformer extends FractalTransformer
 {
     protected array $availableCounts = [];
 
-    protected function addCounts(Model $model, array $data): array
+    protected function pipe(mixed $model, array $data): array
     {
-        if (empty($this->availableCounts)) {
-            return $data;
-        }
-
-        $attributes = $model->getAttributes();
-
-        foreach ($this->availableCounts as $relation) {
-            $key = "{$relation}_count";
-
-            if (array_key_exists($key, $attributes)) {
-                $data[$key] = $model->{$key};
-            }
+        foreach ($this->pipes() as $pipe) {
+            $data = $pipe($model, $data);
         }
 
         return $data;
+    }
+
+    protected function pipes(): array
+    {
+        return [
+            $this->countsPipe(),
+        ];
+    }
+
+    protected function countsPipe(): callable
+    {
+        return function (mixed $model, array $data): array {
+            if (empty($this->availableCounts)) {
+                return $data;
+            }
+
+            $attributes = $model->getAttributes();
+
+            foreach ($this->availableCounts as $relation) {
+                $key = "{$relation}_count";
+
+                if (array_key_exists($key, $attributes)) {
+                    $data[$key] = $model->{$key};
+                }
+            }
+
+            return $data;
+        };
     }
 
     public static function empty(): callable
