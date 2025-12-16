@@ -4,6 +4,7 @@ namespace Apiato\Core\Abstracts\Transformers;
 
 use Apiato\Core\Http\Resources\Collection;
 use Apiato\Core\Http\Resources\Item;
+use Illuminate\Database\Eloquent\Model;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
@@ -11,17 +12,20 @@ abstract class Transformer extends FractalTransformer
 {
     protected array $availableCounts = [];
 
-    public function transform(mixed $data): array
+    protected function addCounts(Model $model, array $data): array
     {
-        $counts = [];
-        foreach ($this->availableCounts as $count) {
-            if (! is_null($data->$count)) {
-                $counts[$count] = $data->$count;
-            }
+        if (empty($this->availableCounts)) {
+            return $data;
         }
 
-        if (method_exists($this, 'mapFields')) {
-            return [...$this->mapFields($data), ...$counts];
+        $attributes = $model->getAttributes();
+
+        foreach ($this->availableCounts as $relation) {
+            $key = "{$relation}_count";
+
+            if (array_key_exists($key, $attributes)) {
+                $data[$key] = $model->{$key};
+            }
         }
 
         return $data;
