@@ -26,7 +26,7 @@ abstract class ApiController extends Controller
         return ApiResponse::json($data, $status, $headers, $options);
     }
 
-    public function noContent($status = 204): JsonResponse
+    public function noContent(): JsonResponse
     {
         return ApiResponse::noContent($status);
     }
