@@ -21,6 +21,11 @@ abstract class Transformer extends FractalTransformer
         return $data;
     }
 
+    protected function data(Model $model, array $data): array
+    {
+        return $this->pipe($model, $data);
+    }
+
     protected function pipes(): array
     {
         return [
@@ -34,7 +39,9 @@ abstract class Transformer extends FractalTransformer
             if (empty($this->availableCounts)) {
                 return $data;
             }
-
+            if (! is_object($model) || ! property_exists($model, 'getAttributes')) {
+                return $data;
+            }
             $attributes = $model->getAttributes();
 
             foreach ($this->availableCounts as $relation) {
