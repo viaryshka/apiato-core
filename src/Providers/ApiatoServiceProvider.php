@@ -5,6 +5,7 @@ namespace Apiato\Core\Providers;
 use Apiato\Core\Abstracts\Providers\MainServiceProvider as AbstractMainServiceProvider;
 use Apiato\Core\Criterias\RequestCriteria;
 use Apiato\Core\Foundation\Apiato;
+use Apiato\Core\Http\Response;
 use Apiato\Core\Loaders\AutoLoaderTrait;
 use Illuminate\Support\Facades\Schema;
 use Prettus\Repository\Criteria\RequestCriteria as ParentRequestCriteria;
@@ -21,9 +22,10 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
         // NOTE: function order of this calls bellow are important. Do not change it.
 
         $this->app->bind('Apiato', Apiato::class);
+        $this->app->bind('Response', Response::class);
         // Register Core Facade Classes, should not be registered in the $aliases property, since they are used
         // by the auto-loading scripts, before the $aliases property is executed.
-        $this->app->alias(Apiato::class, 'Apiato');
+        $this->app->alias(\Apiato\Core\Foundation\Facades\Response::class, 'Response');
 
         // parent::register() should be called AFTER we bind 'Apiato'
         parent::register();

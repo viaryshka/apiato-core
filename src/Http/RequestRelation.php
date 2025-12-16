@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use League\Fractal\Manager;
 use Webmozart\Assert\Assert;
 
 final readonly class RequestRelation
@@ -114,6 +113,6 @@ final readonly class RequestRelation
             Assert::string($includes);
         }
 
-        return app(Manager::class)->parseIncludes($includes)->getRequestedIncludes();
+        return Response::create()->manager()->parseIncludes($includes)->getRequestedIncludes();
     }
 }

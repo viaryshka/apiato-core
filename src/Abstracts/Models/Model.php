@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Models;
 
+use Apiato\Core\Http\Resources\HasResourceKey;
 use Apiato\Core\Scopes\KeywordsSearchScopes;
 use Apiato\Core\Traits\CanGetFillableStatically;
 use Apiato\Core\Traits\CanGetTableNameStatically;
@@ -16,5 +17,6 @@ abstract class Model extends LaravelEloquentModel
     use FactoryLocatorTrait, HasFactory {
         FactoryLocatorTrait::newFactory insteadof HasFactory;
     }
+    use HasResourceKey;
     use KeywordsSearchScopes;
 }
