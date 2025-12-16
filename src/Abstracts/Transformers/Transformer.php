@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Transformers;
 
-use Apiato\Http\Resources\Collection;
+use Apiato\Core\Http\Resources\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract as FractalTransformer;
@@ -41,7 +41,7 @@ abstract class Transformer extends FractalTransformer
         return static fn(): array => [];
     }
 
-    public function item($data, $transformer, string|null $resourceKey = null): \Apiato\Http\Resources\Item
+    public function item($data, $transformer, string|null $resourceKey = null): \Apiato\Core\Http\Resources\Item
     {
         return new Item($data, $transformer, $resourceKey);
     }
