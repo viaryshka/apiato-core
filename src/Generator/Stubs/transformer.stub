@@ -13,7 +13,7 @@ class {{class-name}} extends ParentTransformer
     protected array $availableIncludes = [
     ];
 
-    public function mapFields({{model}} ${{_model}}): array
+    public function transform({{model}} ${{_model}}): array
     {
         return [
             'id' => ${{_model}}->id,
