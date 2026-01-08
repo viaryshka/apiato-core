@@ -220,7 +220,7 @@ class RequestCriteria extends ParentRequestCriteria
         $split = explode('|', $orderBy);
         if (count($split) > 1 && $split[0] === 'idValue') {
             $table = $model->getModel()->getTable();
-            $id = intval($split[1]);
+            $id = (int) $split[1];
             $model = $model->orderByRaw("CASE WHEN $table.id = {$id} THEN 0 ELSE 1 END $sortedBy");
         }
 
@@ -229,6 +229,16 @@ class RequestCriteria extends ParentRequestCriteria
 
     protected function parserFieldsOrderBy($model, $orderBy, $sortedBy)
     {
+        // Check if this is a scope-based ordering
+        $isScope = Str::startsWith($orderBy, 'scope-');
+        if ($isScope) {
+            $scopeName = explode('-', $orderBy, 2);
+            if (count($scopeName) == 2) {
+                $model = $model->{$scopeName[1]}($sortedBy);
+            }
+            return $model;
+        }
+
         $split = explode('|', $orderBy);
         if (count($split) == 2) {
             /*
