@@ -44,6 +44,6 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
         $this->runLoadersBoot();
 
         // Solves the "specified key was too long" error, introduced in L5.4
-        Schema::defaultStringLength(191);
+        // Schema::defaultStringLength(191);
     }
 }
