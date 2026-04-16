@@ -28,7 +28,7 @@ class {{class-name}} extends ParentApiController
     public function __invoke(List{{models}}Request $request): JsonResponse
     {
         $data = List{{models}}Data::from($request->validated());
-        ${{_models}} = app(List{{models}}Action::class)->run($data);
+        ${{_models}} = app(List{{models}}Action::class)->tryRun($data);
 
         return $this->responseWithTransform(${{_models}}, {{model}}Transformer::class);
     }

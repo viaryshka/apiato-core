@@ -4,25 +4,18 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use App\Containers\{{section-name}}\{{container-name}}\DTO\List{{models}}Data;
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\List{{models}}Task;
-use App\Ship\Exceptions\InvalidRequestParamsException;
 use App\Ship\Parents\Actions\Action as ParentAction;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use Throwable;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class {{class-name}} extends ParentAction
 {
     /**
-     * @throws InvalidRequestParamsException
+     * @throws RepositoryException
      */
     public function run(List{{models}}Data $data): LengthAwarePaginator|Collection
     {
-        try {
-            ${{_models}} = app(List{{models}}Task::class)->run();
-
-            return ${{_models}};
-        } catch (Throwable) {
-            throw new InvalidRequestParamsException;
-        }
+        return app(List{{models}}Task::class)->run();
     }
 }
