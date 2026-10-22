@@ -28,15 +28,15 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "apiato/container-installer": "^2.0.8",
-        "prettus/l5-repository": "^2.10.0",
+        "prettus/l5-repository": "^4.0",
         "spatie/laravel-fractal": "^6.0",
-        "vinkla/hashids": "^13.0",
+        "vinkla/hashids": "^14.0",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^12.0.1",
-        "laravel/passport": "^12.0.0",
+        "laravel/framework": "^13.0",
+        "laravel/passport": "^13.0",
         "ext-gettext": "*"
     },
     "require-dev": {
@@ -44,7 +44,7 @@
         "friendsofphp/php-cs-fixer": "^3.8.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "mockery/mockery": "^1.4.4",
-        "orchestra/testbench": "v10.1.0",
+        "orchestra/testbench": "^11.0",
         "php-standard-library/psalm-plugin": "^2.3",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "^11.0",
